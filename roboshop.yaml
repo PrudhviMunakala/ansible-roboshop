@@ -22,6 +22,7 @@
           name: "{{ item }}-{{ env }}"
       loop: "{{ instances }}"
       register: ec2_output
-    - name: print the output
+
+    - name: getting the output
       ansible.builtln.debug:
         msg: "{{ ec2_output }}"
