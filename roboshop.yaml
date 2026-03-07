@@ -10,6 +10,7 @@
     instances:
       - mongodb
       - catalougue
+      - redis
   tasks:
     - name: creating multiple instances
       amazon.aws.ec2_instance:
