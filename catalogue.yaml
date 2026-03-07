@@ -1,4 +1,4 @@
-- name: configure catalougue
+- name: configure catalogue
   hosts: catalogue
   become: yes
   tasks:
@@ -23,12 +23,12 @@
         path: /app
         state: directory
 
-    - name: Download catalougue code
+    - name: Download catalogue code
       ansible.builtin.get_url:
         url: https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip
         dest: /tmp/catalogue.zip
 
-    - name: unzip catalougue code
+    - name: unzip catalogue code
       ansible.builtin.unarchive:
         src: /tmp/catalogue.zip
         dest: /app
@@ -38,7 +38,7 @@
       community.general.npm:
         path: /app
 
-    - name: copu catalougue service file
+    - name: copu catalogue service file
       ansible.builtin.copy:
         src: catalogue.yaml
         dest: /etc/systemd/system/catalogue.service
@@ -53,14 +53,14 @@
         name: mongodb-mongosh
         state: present
 
-    - name: check catalougue loaded or not
+    - name: check catalogue loaded or not
       ansible.builtin.command: mongosh --host "{{ MONGODB_HOST }}" --quiet  --eval 'db.getMongo().getDBNames().indexOf("catalogue")')
-      register: catalougue_output
+      register: catalogue_output
 
     - name: print the  output
       ansible.builtin.debug:
-        msg: "{{ catalougue_output }}"
+        msg: "{{ catalogue_output }}"
 
     - name: load the products
       ansible.builtin.shell: mongosh --host "{{ MONGODB_HOST }}" </app/db/master-data.js
-      when: catalougue_output.stdout < 0
+      when: catalogue_output.stdout < 0
