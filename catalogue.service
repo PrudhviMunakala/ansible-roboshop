@@ -1,14 +1,31 @@
+; [Unit]
+; Description=Catalogue Service
+
+; [Service]
+; User=roboshop
+; Environment=MONGO=true
+; // highlight-start
+; Environment=MONGO_URL="mongodb://mongodb-dev.ptdevops.online:27017/catalogue"
+; // highlight-end
+; ExecStart=/bin/node /app/server.js
+; SyslogIdentifier=Catalogue
+
+; [Install]
+; WantedBy=multi-user.target
+
+
 [Unit]
-Description = catalogue service
+Description=Catalogue Service
+After=network.target
 
 [Service]
 User=roboshop
 Environment=MONGO=true
-// highlight-start
-Environment=MONGO_URL="mongodb://mongodb-dev.ptdevops.online:27017/catalogue"
-// highlight-end
+Environment=MONGO_URL=mongodb://mongodb-dev.ptdevops.online:27017/catalogue
+WorkingDirectory=/app
 ExecStart=/bin/node /app/server.js
-SyslogIdentifier=catalogue
+SyslogIdentifier=Catalogue
+Restart=always
 
 [Install]
 WantedBy=multi-user.target
