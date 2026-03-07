@@ -4,7 +4,7 @@
   tasks:
     - name: Copy file into local
       ansible.builtin.copy:
-        src: mongo.repo
+        src: mongo.service
         dest: /etc/yum.repos.d/mongo.repo
 
     - name: installing mongodb
