@@ -11,6 +11,13 @@
       - mongodb
       - catalougue
       - redis
+      - user
+      - cart
+      - mysql
+      - payment
+      - shipping
+      - rabbitmq
+      - frontend
   tasks:
     - name: creating multiple instances
       amazon.aws.ec2_instance:
