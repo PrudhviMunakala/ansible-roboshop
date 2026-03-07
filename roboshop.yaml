@@ -4,7 +4,7 @@
   vars:
     sg_id: "sg-0932cabd95603ae65"
     ami_id: "ami-0220d79f3f480ecf5"
-    environment: "dev"
+    env: "dev"
     instances:
       - mongodb
       - catalougue
@@ -14,11 +14,14 @@
         instance_type: "t3.micro"
         security_group: "{{ sg_id }}"
         image_id: "{{ ami_id }}"
-        name: "{{ item }}-{{ environment }}"
+        name: "{{ item }}-{{ env }}"
         tags:
           project: roboshop
-          environment: "{{ environment }}"
+          environment: "{{ env }}"
           componenet: "{{ item }} "
-          name: "{{ item }}-{{ environment }}"
+          name: "{{ item }}-{{ env }}"
       loop: "{{ instances }}"
       register: ec2_output
+    - name: print the output
+      ansible.buitln.debug:
+        msg: "{{ ec2_output }}"
