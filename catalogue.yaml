@@ -38,12 +38,12 @@
       community.general.npm:
         path: /app
 
-    - name: copu catalogue service file
+    - name: copy catalogue service file
       ansible.builtin.copy:
-        src: catalogue.yaml
+        src: catalogue.service
         dest: /etc/systemd/system/catalogue.service
 
-    - name: copu mongo repo
+    - name: copy mongo repo
       ansible.builtin.copy:
         src: mongo.service
         dest: /etc/yum.repos.d/mongo.repo
@@ -68,6 +68,5 @@
     - name: Start catalogue service
       ansible.builtin.service:
         name: catalogue
-        enabled: yes
         state: started
-      
+        enabled: yes
