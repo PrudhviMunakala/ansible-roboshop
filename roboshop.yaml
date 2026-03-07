@@ -5,6 +5,8 @@
     sg_id: "sg-0932cabd95603ae65"
     ami_id: "ami-0220d79f3f480ecf5"
     env: "dev"
+    # zone_id: "Z03858732HUVY50OKOZOA"
+    domain: "ptdevops.online"
     instances:
       - mongodb
       - catalougue
@@ -26,3 +28,14 @@
     - name: getting the output
       ansible.builtin.debug:
         msg: "{{ ec2_output }}"
+
+    - name: create route 53 reords
+      amazon.aws.route53:
+        state: present
+        zone: "{{ domain }}"
+        record: "{{ item.item }}-{{ env }}.{{ domain }}"
+        type: A
+        ttl: 1
+        value: "{{ item.instances[0].private_ip_address }}"
+        wait: true
+      loop: "{{ ec2_output.results }}"
