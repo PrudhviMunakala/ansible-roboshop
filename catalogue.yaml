@@ -1,5 +1,5 @@
 - name: configure catalougue
-  hosts: catalougue
+  hosts: catalogue
   become: yes
   tasks:
     - name: enable nodejs
@@ -40,7 +40,7 @@
 
     - name: copu catalougue service file
       ansible.builtin.copy:
-        src: catalouge.yaml
+        src: catalogue.yaml
         dest: /etc/systemd/system/catalogue.service
 
     - name: copu mongo repo
@@ -60,7 +60,7 @@
     - name: print the  output
       ansible.builtin.debug:
         msg: "{{ catalougue_output }}"
-      
+
     - name: load the products
       ansible.builtin.shell: mongosh --host "{{ MONGODB_HOST }}" </app/db/master-data.js
       when: catalougue_output.stdout < 0
