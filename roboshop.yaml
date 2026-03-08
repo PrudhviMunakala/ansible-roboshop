@@ -4,6 +4,7 @@
   vars:
     sg_id: "sg-0932cabd95603ae65"
     ami_id: "ami-0220d79f3f480ecf5"
+    action: "create"
     env: "dev"
     # zone_id: "Z03858732HUVY50OKOZOA"
     domain: "ptdevops.online"
@@ -32,6 +33,7 @@
           name: "{{ item }}-{{ env }}"
       loop: "{{ instances }}"
       register: ec2_output
+      when: action == "create"
 
     - name: getting the output
       ansible.builtin.debug:
@@ -47,6 +49,7 @@
         value: "{{ item.instances[0].private_ip_address }}"
         wait: true
       loop: "{{ ec2_output.results }}"
+      when: action == "create"
 
     - name: create frontend route 53 reords
       amazon.aws.route53:
@@ -58,4 +61,37 @@
         value: "{{ item.instances[0].public_ip_address }}"
         wait: true
       loop: "{{ ec2_output.results }}"
-      when: item.item == "frontend"
+      when:
+        - item.item == "frontend"
+        - action == "create"
+
+      ### DESTROY ###
+    - name: delete r53 records for frontend
+      amazon.aws.route53:
+        state: absent
+        zone: "{{ domain }}"
+        record: "roboshop-{{ env }}.{{ domain }}" # roboshop-dev.daws88s.online
+        type: A
+        ttl: 1
+      loop: "{{ instances }}"
+      when: # and
+        - item == "frontend"
+        - action == "destroy"
+
+    - name: delete r53 records
+      amazon.aws.route53:
+        state: absent
+        zone: "{{ domain }}"
+        record: "{{ item }}-{{ env }}.{{ domain }}" # roboshop-dev.daws88s.online
+        type: A
+        ttl: 1
+      loop: "{{ instances }}"
+      when: action == "destroy"
+
+    - name: delete ec2 instance
+      amazon.aws.ec2_instance:
+        state: absent
+        name: "{{ item }}-{{ env }}"
+        wait: false
+      loop: "{{ instances }}"
+      when: action == "destroy"
